@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Kema | AI Recipe Generator</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+@font-face {
+font-family: 'Times Now';
+src: local('Times New Roman');
+}
+:root {
+--primary: #FFD700;
+--primary-dark: #e6c200;
+--dark: #0a0a0a;
+--text-gray: #555;
+--bg: #ffffff;
+--font-head: 'Times Now', 'Times New Roman', serif;
+--font-body: 'Inter', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { width: 100%; overflow-x: hidden; background: var(--bg); font-family: var(--font-body); color: var(--dark); user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
+h1, h2, h3, .logo { font-family: var(--font-head); }
+img { display: block; width: 100%; height: auto; }
+a { text-decoration: none; color: inherit; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.btn { display: inline-block; padding: 12px 30px; background: var(--primary); color: var(--dark); border-radius: 8px; font-weight: 700; transition: transform 0.2s; border: none; cursor: pointer; font-family: var(--font-body); }
+.btn:active { transform: scale(0.95); }
+.hidden { display: none !important; }
+header { position: fixed; width: 100%; top: 0; z-index: 999; background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid #f0f0f0; padding: 15px 0; }
+nav { display: flex; justify-content: space-between; align-items: center; }
+.logo { font-size: 2.2rem; font-weight: 900; letter-spacing: -1px; display: flex; align-items: baseline; }
+.logo span { color: var(--primary); margin-left: -2px; font-size: 2.8rem; line-height: 0; position: relative; top: 5px; }
+.nav-links { display: flex; gap: 30px; list-style: none; }
+.nav-links a { font-weight: 500; font-size: 0.95rem; }
+.hero { padding-top: 140px; min-height: 100vh; display: flex; align-items: center; background: radial-gradient(circle at 50% 0%, #fffdf0 0%, #fff 70%); position: relative; overflow: hidden; }
+.hero-content { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; align-items: center; width: 100%; }
+.hero-text h1 { font-size: 4.5rem; line-height: 0.95; margin-bottom: 25px; letter-spacing: -2px; }
+.hero-text p { font-size: 1.1rem; color: var(--text-gray); margin-bottom: 35px; max-width: 400px; line-height: 1.5; }
+.hero-visuals { position: relative; height: 600px; display: flex; justify-content: center; align-items: center; }
+.phone-mockup { width: 280px; height: 580px; background: #000; border-radius: 45px; border: 10px solid #1a1a1a; overflow: hidden; position: absolute; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.3); transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.phone-mockup img { width: 100%; height: 100%; object-fit: cover; }
+.p1 { z-index: 2; transform: rotate(-8deg) translateX(-40px); }
+.p2 { z-index: 1; transform: rotate(8deg) translateX(40px) translateY(30px); }
+.section { padding: 120px 0; border-bottom: 1px solid #fafafa; }
+.feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+.feature-text h2 { font-size: 3.2rem; margin-bottom: 20px; line-height: 1; letter-spacing: -1px; }
+.feature-text p { font-size: 1.1rem; color: var(--text-gray); line-height: 1.6; }
+.dual-phones { display: flex; justify-content: center; position: relative; height: 500px; width: 100%; }
+.dual-phones .phone-mockup { position: relative; width: 240px; height: 500px; margin: 0 -30px; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2); }
+.dp-left { transform: rotate(-5deg) translateY(20px); z-index: 2; }
+.dp-right { transform: rotate(5deg) translateY(-20px); z-index: 1; }
+.single-phone { display: flex; justify-content: center; }
+.single-phone .phone-mockup { position: relative; transform: rotate(0); }
+.rev { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.rev.active { opacity: 1; transform: translateY(0); }
+footer { background: #000; color: #fff; padding: 80px 0 40px; text-align: center; }
+.coming-soon { display: flex; justify-content: center; gap: 40px; margin-top: 40px; flex-wrap: wrap; }
+.store-badge { color: #888; font-size: 0.9rem; border: 1px solid #333; padding: 10px 20px; border-radius: 50px; }
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.modal.open { opacity: 1; pointer-events: auto; }
+.modal-box { background: #fff; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; transform: scale(0.9); transition: transform 0.3s; }
+.modal.open .modal-box { transform: scale(1); }
+@media (max-width: 768px) {
+.hero { padding-top: 100px; display: block; min-height: auto; text-align: center; padding-bottom: 60px; background: #fff; }
+.hero-content { display: flex; flex-direction: column; gap: 40px; }
+.hero-text h1 { font-size: 3rem; }
+.hero-visuals { height: 400px; width: 100%; margin-top: 20px; }
+.phone-mockup { width: 180px; height: 360px; border-width: 6px; }
+.p1 { transform: rotate(-5deg) translateX(-20px); }
+.p2 { transform: rotate(5deg) translateX(20px); }
+.section { padding: 60px 0; }
+.feature-grid { grid-template-columns: 1fr; display: flex; flex-direction: column-reverse; text-align: center; gap: 30px; }
+.feature-grid.reverse-mob { flex-direction: column; }
+.dual-phones { height: 360px; }
+.dual-phones .phone-mockup { width: 160px; height: 320px; margin: 0 -15px; }
+.single-phone .phone-mockup { width: 200px; height: 400px; }
+.nav-links { display: none; }
+}
+</style>
+</head>
+<body oncontextmenu="return false;">
+<header>
+<div class="container">
+<nav>
+<div class="logo">Kema<span>.</span></div>
+<ul class="nav-links">
+<li><a href="#input">Input</a></li>
+<li><a href="#generate">Recipes</a></li>
+<li><a href="#offline">Offline</a></li>
+<li><a href="#chat">Chat</a></li>
+</ul>
+<button class="btn" onclick="dl(this)">Download App</button>
+</nav>
+</div>
+</header>
+<section class="hero">
+<div class="container hero-content rev">
+<div class="hero-text">
+<h1>Your Kitchen.<br>Reimagined.</h1>
+<p>Kema instantly turns your ingredients into gourmet meals using advanced AI. No more waste, just taste.</p>
+<button class="btn" onclick="dl(this)">Download App</button>
+</div>
+<div class="hero-visuals">
+<div class="phone-mockup p1"><img src="https://i.ibb.co/cKS6dCNy/Screenshot-2025-12-09-002243.png"></div>
+<div class="phone-mockup p2"><img src="https://i.ibb.co/PbZwShT/Screenshot-2025-12-09-002325.png"></div>
+</div>
+</div>
+</section>
+<section id="input" class="section">
+<div class="container feature-grid rev">
+<div class="feature-text">
+<h2>What's in your Kitchen?</h2>
+<p>Simply type your available ingredients. Kema scans your virtual pantry to find the perfect match.</p>
+</div>
+<div class="dual-phones">
+<div class="phone-mockup dp-left"><img src="https://i.ibb.co/cKS6dCNy/Screenshot-2025-12-09-002243.png"></div>
+<div class="phone-mockup dp-right"><img src="https://i.ibb.co/kVNyRHKY/Screenshot-2025-12-09-002800.png"></div>
+</div>
+</div>
+</section>
+<section id="generate" class="section">
+<div class="container feature-grid reverse-mob rev">
+<div class="dual-phones">
+<div class="phone-mockup dp-left"><img src="https://i.ibb.co/hRVXLw5k/Screenshot-2025-12-09-002343.png"></div>
+<div class="phone-mockup dp-right"><img src="https://i.ibb.co/PbZwShT/Screenshot-2025-12-09-002325.png"></div>
+</div>
+<div class="feature-text">
+<h2>Generate in Seconds</h2>
+<p>Get detailed, step-by-step instructions. From prep to plate, we guide you through every delicious moment.</p>
+</div>
+</div>
+</section>
+<section id="offline" class="section">
+<div class="container feature-grid rev">
+<div class="feature-text">
+<h2>Cook Anywhere, Anytime</h2>
+<p>No internet? No problem. Access your generated recipes offline instantly. Your cookbook stays with you.</p>
+</div>
+<div class="single-phone">
+<div class="phone-mockup"><img src="https://i.ibb.co/PbZwShT/Screenshot-2025-12-09-002325.png" style="filter: grayscale(20%);"></div>
+</div>
+</div>
+</section>
+<section id="chat" class="section">
+<div class="container feature-grid reverse-mob rev">
+<div class="single-phone">
+<div class="phone-mockup"><img src="https://i.ibb.co/WNmvr33K/Screenshot-2025-12-09-002354.png"></div>
+</div>
+<div class="feature-text">
+<h2>Chat with Chef</h2>
+<p>Stuck on a step? Need a substitution? Our AI Chef is ready to help you 24/7.</p>
+</div>
+</div>
+</section>
+<section class="section">
+<div class="container feature-grid rev">
+<div class="feature-text">
+<h2>Your Rules</h2>
+<p>Dietary restrictions, allergies, or dislikes? Configure your profile and never see a bad recipe again.</p>
+</div>
+<div class="single-phone">
+<div class="phone-mockup"><img src="https://i.ibb.co/6JFwqk6K/Screenshot-2025-12-09-002811.png"></div>
+</div>
+</div>
+</section>
+<footer>
+<div class="container">
+<div class="logo" style="justify-content: center; color: #fff;">Kema<span>.</span></div>
+<div class="coming-soon">
+<div class="store-badge">Coming to iOS soon</div>
+<div class="store-badge">Coming to Play Store soon</div>
+</div>
+<p style="margin-top: 30px; color: #444; font-size: 0.8rem;">&copy; 2025 Kema AI.</p>
+</div>
+</footer>
+<div id="mdl" class="modal">
+<div class="modal-box">
+<h3 style="font-size: 1.8rem; margin-bottom: 10px;">Thank You!</h3>
+<p>Your download has started.</p>
+<button class="btn" onclick="document.getElementById('mdl').classList.remove('open')" style="margin-top: 20px;">Close</button>
+</div>
+</div>
+<script>
+(function(){
+var _0x1a2b = false;
+document.addEventListener('keydown', function(e){
+if(e.ctrlKey && e.altKey && e.shiftKey && e.key === 'Z'){ _0x1a2b = true; alert('Dev mode: ON'); }
+});
+document.addEventListener('contextmenu', event => event.preventDefault());
+document.onkeydown = function(e) {
+if(!_0x1a2b && (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) || (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) || (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)))) { return false; }
+};
+setInterval(function(){
+if(!_0x1a2b){
+var _0x99 = window.outerWidth - window.innerWidth > 160;
+var _0x88 = window.outerHeight - window.innerHeight > 160;
+if(_0x99 || _0x88){ document.body.innerHTML = ''; window.location.href = "about:blank"; }
+}
+}, 1000);
+})();
+
+function dl(e){
+e.style.display='none';
+window.location.href = atob('aHR0cHM6Ly9kb3dubG9hZDE5NzkubWVkaWFmaXJlLmNvbS91bXZ0dHlpaWRlMWdMNDJvd2VWeXl3ekxxNnZmMjJLVGNXY0RTM091c3Y0Wm5oVVVmeWxjaDJ0bzBHcmhTdlgzZFJhend6ZGJFaDNnRzBUNU5qM2k2cDkzOXQyWmdYOF9GdjZGLXBHTUJROE5XMjNOWnk1X0lwYk1GRWpkT2g2Sy1mRFJwMEtCRDNHYlZueEN4SUItWENob21POW15QkIwaWdNdXpHU0Y1M2llMUJvL2t4cHd1dGVtNHpkaHRqbC9LZW1hX1JlbGVhc2VfT2ZmaWNpYWwuYXBr');
+document.getElementById('mdl').classList.add('open');
+}
+
+const obs = new IntersectionObserver((entries)=>{
+entries.forEach(entry=>{
+if(entry.isIntersecting){ entry.target.classList.add('active'); }
+});
+}, { threshold: 0.1 });
+document.querySelectorAll('.rev').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
